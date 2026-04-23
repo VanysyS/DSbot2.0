@@ -23,7 +23,7 @@ public class AI {
             }
 
             // Точне і правильне посилання на найновішу швидку модель (без помилки 404)
-            String url = "String url = \"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=\" + apiKey;" + apiKey;
+            String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=" + apiKey;
 
             // 2. Формуємо стиль
             String systemStyle = "Ти знаходишся на сервері, відповідай так само як до тебе. Якщо в повідомленні є мат," +
