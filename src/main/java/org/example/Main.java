@@ -220,7 +220,7 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        String ChannelId = "1445473227832033332";
+        String ChannelId = "1409600926645489818";
         // 1. Ищем системный канал (тот, куда Дискорд сам пишет "User joined")
         TextChannel channel = event.getGuild().getTextChannelById(ChannelId);
         // Если такой канал настроен на сервере, пишем туда
