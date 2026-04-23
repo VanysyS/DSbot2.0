@@ -7,9 +7,9 @@ import java.net.http.HttpResponse;
 
 public class GeminiTest {
     public static void main(String[] args) {
-        String API_KEY = "AIzaSyDGIS8l9n84kpdVD5rmRhG8HY7D65RPW7Q"; // Встав свій ключ
+        String token = System.getenv("TOKEN");
         // Це інший URL - він покаже список усіх моделей
-        String url = "https://generativelanguage.googleapis.com/v1beta/models?key=" + API_KEY;
+        String url = "https://generativelanguage.googleapis.com/v1beta/models?key=" + token;
 
         try {
             HttpClient client = HttpClient.newHttpClient();
