@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 public class AI {
     static String[] Frazochki = {"Нет, іді нахуй", "Хуесос ебаний", "Я твою маму вертел", "Пішов нахуй", "Я твій рот єбав"};
-    private static final String API_KEY = "AIzaSyDGIS8l9n84kpdVD5rmRhG8HY7D65RPW7Q";
-    private static final String URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=" + API_KEY;
+    private static final String API_KEY = System.getenv("TOKEN");
+    private static final String URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
     public static String askGemini(String prompt) {
         try {
             // --- ПОЧАТОК НОВОГО КОДУ ДЛЯ СТИЛЮ ---
