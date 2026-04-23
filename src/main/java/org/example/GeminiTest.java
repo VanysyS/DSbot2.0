@@ -9,7 +9,7 @@ public class GeminiTest {
     public static void main(String[] args) {
         String token = System.getenv("TOKEN");
         // Це інший URL - він покаже список усіх моделей
-        String url = "https://generativelanguage.googleapis.com/v1beta/models?key=" + token;
+        String url = "ddddd" + token;
 
         try {
             HttpClient client = HttpClient.newHttpClient();
