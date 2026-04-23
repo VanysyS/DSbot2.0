@@ -11,59 +11,59 @@ import java.util.Arrays;
 
 public class AI {
     static String[] Frazochki = {"Нет, іді нахуй", "Хуесос ебаний", "Я твою маму вертел", "Пішов нахуй", "Я твій рот єбав"};
-    private static final String API_KEY = System.getenv("TOKEN_GEMM");
-    private static final String URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=" + API_KEY;
+
     public static String askGemini(String prompt) {
         try {
-            // --- ПОЧАТОК НОВОГО КОДУ ДЛЯ СТИЛЮ ---
-            // 1. Придумай, як бот має поводитись
+            // 1. Беремо ключ прямо з налаштувань Railway
+            String apiKey = System.getenv("GEMINI_KEY");
+
+            // Захист від забудькуватості: якщо ключа немає в Railway, бот скаже про це в Дискорді!
+            if (apiKey == null || apiKey.isEmpty()) {
+                return "Помилка: Ключ GEMINI_KEY не знайдено в налаштуваннях Railway! Додай його у вкладці Variables.";
+            }
+
+            // Точне і правильне посилання на найновішу швидку модель (без помилки 404)
+            String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+
+            // 2. Формуємо стиль
             String systemStyle = "Ти знаходишся на сервері, відповідай так само як до тебе. Якщо в повідомленні є мат," +
                     " можеш також використати, АЛЕ МАТ НЕ Є ОБОВ'ЯЗКОВИМ. Якщо мату в повідомленні немає мату можеш використати мат з шансом 1/5." +
                     " Відповідай виключно українською." + Arrays.toString(Frazochki) +
                     "Можеш використовувати ці фрази для генерації відповідей, якщо в повідомленні був мат";
 
-            // 2. Запаковуємо цей стиль у JSON (так само, як і повідомлення)
             JSONObject styleText = new JSONObject();
             styleText.put("text", systemStyle);
 
             JSONObject styleParts = new JSONObject();
             styleParts.put("parts", new JSONArray().put(styleText));
-            // --- КІНЕЦЬ НОВОГО КОДУ ---
 
-
-            // 3. Формуємо повідомлення користувача (твій старий код)
+            // 3. Формуємо повідомлення користувача
             JSONObject textPart = new JSONObject();
             textPart.put("text", prompt);
 
             JSONObject userMessage = new JSONObject();
+            userMessage.put("role", "user"); // ДОДАНО: це лікує помилку 400 у багатьох випадках
             userMessage.put("parts", new JSONArray().put(textPart));
 
-
-            // 4. Збираємо все разом у головний jsonBody
+            // 4. Збираємо весь запит
             JSONObject jsonBody = new JSONObject();
-
-            // ВАЖЛИВО: Додаємо інструкцію стилю
             jsonBody.put("system_instruction", styleParts);
-
-            // Додаємо повідомлення користувача
             jsonBody.put("contents", new JSONArray().put(userMessage));
 
-
-            // 5. Відправляємо запит (далі все як було)
+            // 5. Відправляємо
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(URL))
+                    .uri(URI.create(url))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody.toString(), StandardCharsets.UTF_8))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // ... (твоя перевірка кодів і помилок залишається без змін) ...
-            System.out.println("Response Code: " + response.statusCode());
-
+            // Якщо вилізе помилка - ми побачимо її текст у логах Railway!
             if (response.statusCode() != 200) {
-                return "Помилка API! Код: " + response.statusCode();
+                System.out.println("Gemini Помилка " + response.statusCode() + ": " + response.body());
+                return "Помилка API! Код: " + response.statusCode() + ". Глянь логи Railway!";
             }
 
             JSONObject responseJson = new JSONObject(response.body());
@@ -80,4 +80,3 @@ public class AI {
         }
     }
 }
-
