@@ -6,4 +6,4 @@ COPY . .
 
 RUN mvn clean package
 
-CMD ["java", "-jar", "target/*.jar"]
+CMD java -jar target/DSbot-1.0-SNAPSHOT.jar
